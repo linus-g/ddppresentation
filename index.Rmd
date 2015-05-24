@@ -22,9 +22,44 @@ and distributions that are very different can often have the same value for some
 
 ---
 
-## Usage 1
+## Usage
 
-![Image of application](capture.png)
+Create an income distribution from two different subgroups by selecting the following paramaters for each group:
+
+1. Group size
+2. Mean income
+3. Standard deviation of income
+
+---
+
+## Output
+
+
+```{r plots, fig.height = 6, fig.width=12, fig.align = 'center', message = F, echo=FALSE}
+
+require(ggplot2)
+source("helpers.R")
+
+data <- generateData(list(c(1000,30000,10000),c(500, 80000, 20000)))
+
+p1 <- distPlot(data)
+p2 <- ineqPlot(data)
+                
+multiplot(p1, p2, cols=2)
+
+```
+
+```{r table, fig.align = 'center', message = F, echo=FALSE, results="asis", comment=NA}
+
+        library(xtable)
+        options(xtable.type = "html")
+        
+        data <- generateData(list(c(1000,30000,10000),c(500, 80000, 20000)))
+
+        table <- data.frame(gini=ineq(data$income), p90to10=percentileIncomeRatio(data, 0.9, 0.1), cov=sd(data$income)/mean(data$income))
+        colnames(table)=c("Gini coefficient", "Ratio P90 to P10", "Coefficient of variation")
+        print(xtable(table), include.rownames=FALSE)
+```
 
 ---
 
